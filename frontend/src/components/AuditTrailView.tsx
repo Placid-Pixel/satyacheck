@@ -123,11 +123,10 @@ export const AuditTrailView: React.FC = () => {
 
       {/* Verification Banner Result */}
       {verificationResult && (
-        <div className={`p-4 rounded-xl border flex items-center justify-between ${
-          verificationResult.is_valid
+        <div className={`p-4 rounded-xl border flex items-center justify-between ${verificationResult.is_valid
             ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
             : 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200'
-        }`}>
+          }`}>
           <div className="flex items-center gap-3">
             {verificationResult.is_valid ? (
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
