@@ -14,7 +14,7 @@ import { LiveELAForensicModal } from './components/LiveELAForensicModal';
 import { AIVerificationAgentView } from './components/AIVerificationAgentView';
 
 const AppContent: React.FC = () => {
-  const [currentView, setCurrentView] = useState<string>('queue');
+  const [currentView, setCurrentView] = useState<string>('ai_agent');
   const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
   const [selectedAppNumber, setSelectedAppNumber] = useState<string>('AICTE-APP-2026-105');
   const [isDemoTourOpen, setIsDemoTourOpen] = useState<boolean>(false);
@@ -68,12 +68,14 @@ const AppContent: React.FC = () => {
           </div>
         )}
 
-        {/* SatyaCheck AI Verification Agent Dashboard */}
+        {/* SatyaCheck AI Verification Agent Dashboard (Primary Home View) */}
         {currentView === 'ai_agent' && (
           <div className="flex-1 h-full overflow-hidden flex flex-col">
             <AIVerificationAgentView
               initialAppId={selectedAppId}
               onSelectApplication={handleSelectApplication}
+              onOpenWorkbench={handleOpenWorkbench}
+              onOpenELALab={() => setIsELALabOpen(true)}
             />
           </div>
         )}

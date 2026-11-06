@@ -8,6 +8,13 @@ node_modules/
 venv/
 **/venv/
 .env
+.env.local
+.env.*.local
+*.key
+.fernet_key
+.secret_key
+backend/storage/.fernet_key
+backend/storage/.secret_key
 .venv
 env/
 ENV/
@@ -31,3 +38,5 @@ Thumbs.db
 .vscode/
 .idea/
 *.db-journal
+backend/storage/uploads/
+backend/storage/vault/

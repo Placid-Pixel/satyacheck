@@ -70,6 +70,41 @@ def test_agent_api():
     assert len(h_data) >= 1
     print(f"7. Get History Endpoint OK ({len(h_data)} past runs listed)")
 
+    # 8. Create New Docket endpoint
+    create_res = client.post(
+        "/api/agent/create-application",
+        json={"institution_name": "Test Engineering Academy", "state": "Maharashtra", "category": "EOA"},
+        headers=headers
+    )
+    assert create_res.status_code == 200
+    new_docket = create_res.json()
+    assert "id" in new_docket
+    assert "application_number" in new_docket
+    new_app_id = new_docket["id"]
+    print(f"8. Create Docket Endpoint OK (new_app_id={new_app_id}, num={new_docket['application_number']})")
+
+    # 9. Upload Document endpoint
+    import io
+    dummy_pdf_bytes = b"%PDF-1.4\n1 0 obj\n<<\n/Title (Fire NOC Clearance)\n>>\nendobj\ntrailer\n<<\n>>\n%%EOF"
+    upload_res = client.post(
+        f"/api/agent/upload-document/{new_app_id}",
+        files={"file": ("test_fire_noc.pdf", io.BytesIO(dummy_pdf_bytes), "application/pdf")},
+        headers=headers
+    )
+    assert upload_res.status_code == 200
+    up_data = upload_res.json()
+    assert up_data["success"] is True
+    assert "document_id" in up_data
+    print(f"9. Upload Document Endpoint OK (doc_id={up_data['document_id']}, type={up_data['doc_type']})")
+
+    # 10. Get Documents endpoint
+    docs_res = client.get(f"/api/agent/documents/{new_app_id}", headers=headers)
+    assert docs_res.status_code == 200
+    docs_data = docs_res.json()
+    assert len(docs_data) >= 1
+    assert docs_data[0]["file_name"] == "test_fire_noc.pdf"
+    print(f"10. Get Application Documents OK ({len(docs_data)} documents verified)")
+
     print("\nALL AGENT API ENDPOINT TESTS PASSED!")
 
 if __name__ == "__main__":

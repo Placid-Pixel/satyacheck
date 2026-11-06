@@ -19,7 +19,13 @@ def get_password_hash(password: str) -> str:
     return hashlib.sha256(f"{salt}{password}".encode("utf-8")).hexdigest()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return get_password_hash(plain_password) == hashed_password
+    if get_password_hash(plain_password) == hashed_password:
+        return True
+    # Backward compatibility for existing databases during key rotation
+    legacy_salt = "satyacheck-super"
+    if hashlib.sha256(f"{legacy_salt}{plain_password}".encode("utf-8")).hexdigest() == hashed_password:
+        return True
+    return False
 
 def create_access_token(subject: Union[str, Any], role: str, expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta:

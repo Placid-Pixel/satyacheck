@@ -98,7 +98,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:420, y:185]',
       ela_spike_label: 'ΔE: 89.2% Quantization Discontinuity',
       ela_detail: 'Resaved JPEG compression artifact isolated over numerical digits "402/A". Base flatbed scan baseline: 2018.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 173 ms, 230 ms',
       gateway_status: 'MATCH FAILURE',
       gateway_status_type: 'error',
@@ -138,7 +138,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:405, y:210]',
       ela_spike_label: 'ΔE: 84.7% Copy-Move Compression Spike',
       ela_detail: 'Cloned survey boundary stamp detected with altered acreage digits. Multi-layer paste artifact confirmed.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 185 ms, 244 ms',
       gateway_status: 'MATCH FAILURE',
       gateway_status_type: 'error',
@@ -178,7 +178,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:380, y:195]',
       ela_spike_label: 'ΔE: 91.5% Synthetic Stamp Insertion',
       ela_detail: 'Seal RGB alpha channel shows missing paper grain noise floor. Digital vector stamp overlaid onto scanned PDF.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 162 ms, 215 ms',
       gateway_status: 'MATCH FAILURE',
       gateway_status_type: 'error',
@@ -218,7 +218,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:410, y:220]',
       ela_spike_label: 'ΔE: 42.1% Edge Resampling Blur',
       ela_detail: 'Moderate edge interpolation detected on cadastral map boundary line. Boundary coordinates re-drawn.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 191 ms, 240 ms',
       gateway_status: 'DISCREPANCY DETECTED',
       gateway_status_type: 'warning',
@@ -258,7 +258,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:395, y:175]',
       ela_spike_label: 'ΔE: 58.4% Typography Font Mismatch',
       ela_detail: 'Typeface kerning and point size on "Educational" classification differs from government gazette standard.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 210 ms, 290 ms',
       gateway_status: 'DISCREPANCY DETECTED',
       gateway_status_type: 'warning',
@@ -279,7 +279,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
     risk_label: '⚠️ MEDIUM 64.2%',
     border_accent: 'amber',
     timestamp: '2h 45m ago',
-    tags: ['Fire Expired -114d', 'State Fire NOC Expired', 'Assigned Kumar'],
+    tags: ['Fire Expired -114d', 'State Fire NOC Expired', 'Assigned Scrutiny Desk'],
     filter_bucket: 'my_desk',
     forensics: {
       alert_title: '⚠️ WARNING: APH Cl. 2.1 State Fire Safety NOC Expiry Overdue',
@@ -298,7 +298,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:430, y:240]',
       ela_spike_label: 'ΔE: 62.0% Date Splicing Discontinuity',
       ela_detail: 'Expiry year "2026" shows higher JPEG noise artifact compared to base issuance year "2023". Original expired 2025.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 145 ms, 198 ms',
       gateway_status: 'EXPIRED',
       gateway_status_type: 'warning',
@@ -338,7 +338,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:400, y:190]',
       ela_spike_label: 'ΔE: 38.5% Low-level Contrast Shift',
       ela_detail: 'Slight contrast shift on mutation endorsement number. Likely scanner threshold artifact.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 167 ms, 222 ms',
       gateway_status: 'DISCREPANCY DETECTED',
       gateway_status_type: 'warning',
@@ -378,7 +378,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:420, y:185]',
       ela_spike_label: 'ΔE: 3.1% Uniform Sensor Baseline',
       ela_detail: 'Flawless uniform sensor noise floor across entire document page. Zero evidence of splicing or manipulation.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 142 ms, 180 ms',
       gateway_status: 'SYNC VERIFIED',
       gateway_status_type: 'success',
@@ -418,7 +418,7 @@ const DEFAULT_DOCKETS: DocketItem[] = [
       ela_coords: '[x:410, y:190]',
       ela_spike_label: 'ΔE: 2.8% Clean Sensor Signature',
       ela_detail: 'Document conforms to official e-Patta PDF generator signature with valid SHA-256 certificate chain.',
-      gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+      gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
       gateway_latency: 'Response time: 138 ms, 175 ms',
       gateway_status: 'SYNC VERIFIED',
       gateway_status_type: 'success',
@@ -505,7 +505,7 @@ export const DocketConsoleView: React.FC<DocketConsoleViewProps> = ({
                 ela_coords: '[x:420, y:185]',
                 ela_spike_label: 'ΔE: 89.2% Quantization Discontinuity',
                 ela_detail: 'Resaved JPEG compression table mismatch isolated on Survey No digits.',
-                gateway_name: 'Bhoomi / Dharani Gateway - LIVE PING',
+                gateway_name: 'Land Records Authority Adapter (Simulated Sandbox)',
                 gateway_latency: 'Response time: 173 ms, 230 ms',
                 gateway_status: 'MATCH FAILURE',
                 gateway_status_type: 'error',
@@ -708,17 +708,17 @@ export const DocketConsoleView: React.FC<DocketConsoleViewProps> = ({
           </div>
         </div>
 
-        {/* Right: Officer metadata & Live State APIs pill */}
+        {/* Right: Officer metadata & Authority status pill */}
         <div className="flex items-center gap-2.5 font-mono text-[11px] shrink-0 pl-2">
           {/* Officer ID */}
           <span className="hidden sm:inline text-slate-300 px-2 py-0.5 rounded bg-[#0F172A] border border-slate-800">
-            Officer A. Kumar (ID-4092)
+            Officer Name
           </span>
 
-          {/* Live Status Pill */}
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#0A1A14] text-emerald-400 border border-emerald-800/70">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-semibold text-[10px]">● State APIs Live (Dharani/Bhoomi Gateway)</span>
+          {/* Authority Sandbox Status Pill */}
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#0A1A24] text-blue-400 border border-blue-800/70">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+            <span className="font-semibold text-[10px]">Authority Adapters (Sandbox)</span>
           </div>
         </div>
       </header>
@@ -1182,7 +1182,7 @@ export const DocketConsoleView: React.FC<DocketConsoleViewProps> = ({
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {/* Panel 1: Bhoomi / Dharani Gateway - LIVE PING */}
+                    {/* Panel 1: Land Records Authority Adapter (Simulated Sandbox) */}
                     <div className="bg-[#0B0F19] rounded-xl border border-slate-800 p-3 space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-xs font-bold text-slate-200">

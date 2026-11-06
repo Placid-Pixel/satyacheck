@@ -11,8 +11,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=satyacheck-super-secret-key-aicte-sih-2026
-      - FERNET_KEY=E5rX0Yv1v39X8K_sPz8_jY6L4_Dq7oP2_0yT9-5V4Wc=
+      - SECRET_KEY=${SECRET_KEY:-}
+      - FERNET_KEY=${FERNET_KEY:-}
+      - FERNET_OLD_KEYS=${FERNET_OLD_KEYS:-}
       - DATABASE_URL=sqlite:////app/backend/storage/satyacheck.db
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - MASK_SENSITIVE_DATA=true

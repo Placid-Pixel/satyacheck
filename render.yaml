@@ -9,7 +9,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: FERNET_KEY
-        value: E5rX0Yv1v39X8K_sPz8_jY6L4_Dq7oP2_0yT9-5V4Wc=
+        sync: false
       - key: MASK_SENSITIVE_DATA
         value: "true"
       - key: GEMINI_API_KEY

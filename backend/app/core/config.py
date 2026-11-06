@@ -1,9 +1,47 @@
 import os
+import secrets
 from pathlib import Path
 from pydantic_settings import BaseSettings
 from typing import Optional
+from cryptography.fernet import Fernet
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+STORAGE_DIR = BASE_DIR / "storage"
+STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+
+def _get_or_generate_fernet_key() -> str:
+    env_key = os.getenv("FERNET_KEY")
+    if env_key:
+        return env_key.strip()
+    key_file = STORAGE_DIR / ".fernet_key"
+    if key_file.exists():
+        try:
+            return key_file.read_text(encoding="utf-8").strip()
+        except Exception:
+            pass
+    new_key = Fernet.generate_key().decode()
+    try:
+        key_file.write_text(new_key, encoding="utf-8")
+    except Exception:
+        pass
+    return new_key
+
+def _get_or_generate_secret_key() -> str:
+    env_sec = os.getenv("SECRET_KEY")
+    if env_sec:
+        return env_sec.strip()
+    sec_file = STORAGE_DIR / ".secret_key"
+    if sec_file.exists():
+        try:
+            return sec_file.read_text(encoding="utf-8").strip()
+        except Exception:
+            pass
+    new_sec = secrets.token_urlsafe(32)
+    try:
+        sec_file.write_text(new_sec, encoding="utf-8")
+    except Exception:
+        pass
+    return new_sec
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "SatyaCheck — AICTE Trust Layer"
@@ -11,10 +49,11 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api"
     
     # Security
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "satyacheck-super-secret-key-aicte-sih-2026")
+    SECRET_KEY: str = _get_or_generate_secret_key()
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
-    FERNET_KEY: str = os.getenv("FERNET_KEY", "E5rX0Yv1v39X8K_sPz8_jY6L4_Dq7oP2_0yT9-5V4Wc=")  # Base64 32 bytes
+    FERNET_KEY: str = _get_or_generate_fernet_key()
+    FERNET_OLD_KEYS: str = os.getenv("FERNET_OLD_KEYS", "")
     
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'satyacheck.db'}")
@@ -46,3 +85,4 @@ settings = Settings()
 # Ensure directories exist
 for path in [settings.DATA_DIR, settings.UPLOAD_DIR, settings.SYNTHETIC_DIR, settings.PROCESSED_DIR]:
     path.mkdir(parents=True, exist_ok=True)
+

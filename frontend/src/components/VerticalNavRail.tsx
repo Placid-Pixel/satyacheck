@@ -35,11 +35,19 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
 
   const navItems = [
     {
+      id: 'ai_agent',
+      label: 'AI Verification Agent',
+      sublabel: 'Gemini Tool-Calling Engine',
+      icon: Sparkles,
+      hotkey: 'Alt+1',
+      matchViews: ['ai_agent']
+    },
+    {
       id: 'queue',
       label: 'Docket Queue',
       sublabel: 'Master-Detail Triage',
       icon: LayoutGrid,
-      hotkey: 'Alt+1',
+      hotkey: 'Alt+2',
       matchViews: ['queue', 'dashboard']
     },
     {
@@ -47,16 +55,8 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
       label: 'Scrutiny Workbench',
       sublabel: '4-Column Deep Forensics',
       icon: FileSearch,
-      hotkey: 'Alt+2',
+      hotkey: 'Alt+3',
       matchViews: ['workbench']
-    },
-    {
-      id: 'ai_agent',
-      label: 'AI Verification Agent',
-      sublabel: 'Gemini Tool-Calling Engine',
-      icon: Sparkles,
-      hotkey: 'Alt+A',
-      matchViews: ['ai_agent']
     },
     ...(openELALab
       ? [
@@ -72,15 +72,6 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
         ]
       : []),
     {
-      id: 'user_management',
-      label: 'User & Role Management',
-      sublabel: 'Authority Access Matrix',
-      icon: UserCheck,
-      hotkey: 'Alt+3',
-      action: () => setShowRoleModal(true),
-      matchViews: []
-    },
-    {
       id: 'audit',
       label: 'Compliance Ledger & Audit',
       sublabel: 'SHA-256 Hash Chain',
@@ -90,18 +81,27 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
     },
     {
       id: 'rules',
-      label: 'Rule Studio & Settings',
-      sublabel: 'APH 2026-27 Norm Engine',
+      label: 'Rule Studio & Norms',
+      sublabel: 'Regulatory Norm Engine',
       icon: Sliders,
       hotkey: 'Alt+5',
       matchViews: ['rules']
+    },
+    {
+      id: 'user_management',
+      label: 'Role & Desk Access',
+      sublabel: 'Operational Access Matrix',
+      icon: UserCheck,
+      hotkey: 'Alt+6',
+      action: () => setShowRoleModal(true),
+      matchViews: []
     }
   ];
 
   const roleLabels: Record<Role, { title: string; badge: string; color: string }> = {
     SCRUTINY_OFFICER: {
       title: 'Scrutiny Officer',
-      badge: 'ID-4092 (Western Region)',
+      badge: 'Regulatory Scrutiny Desk',
       color: 'text-blue-400 bg-blue-950/60 border-blue-800'
     },
     INSTITUTION_USER: {
@@ -127,54 +127,33 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
         className="w-[54px] bg-[#0B0F17] border-r border-slate-800 flex flex-col items-center justify-between py-3 select-none z-50 shrink-0 h-full relative"
         aria-label="Primary Navigation Rail"
       >
-        {/* Top Section: AICTE Gold Crest / Emblem */}
+        {/* Top Section: SatyaCheck Minimal Branding */}
         <div className="flex flex-col items-center gap-4 w-full">
           <div
-            onClick={() => setCurrentView('queue')}
+            onClick={() => setCurrentView('ai_agent')}
             className="group relative cursor-pointer flex items-center justify-center"
-            title="SatyaCheck • AICTE Trust Layer Console"
+            title="SatyaCheck AI • Verification Workspace"
           >
-            {/* AICTE Gold Crest / Emblem SVG */}
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#261E0B] to-[#120F05] border border-amber-500/50 flex items-center justify-center shadow-lg shadow-amber-950/40 hover:border-amber-400 transition-all hover:scale-105">
+            {/* Minimal SatyaCheck Geometric Shield Emblem */}
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600/30 to-indigo-900/40 border border-blue-500/40 flex items-center justify-center shadow-lg shadow-blue-950/40 hover:border-blue-400 transition-all hover:scale-105">
               <svg
-                viewBox="0 0 48 48"
-                className="w-7 h-7 text-amber-400 fill-current drop-shadow-[0_1px_3px_rgba(245,158,11,0.5)]"
+                viewBox="0 0 24 24"
+                className="w-5 h-5 text-blue-400 stroke-current fill-none stroke-2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                {/* Outer ornamental medallion circle */}
-                <circle
-                  cx="24"
-                  cy="24"
-                  r="21"
-                  fill="none"
-                  stroke="#F59E0B"
-                  strokeWidth="1.5"
-                  strokeDasharray="2 1.5"
-                  opacity="0.8"
-                />
-                <circle
-                  cx="24"
-                  cy="24"
-                  r="18"
-                  fill="none"
-                  stroke="#D97706"
-                  strokeWidth="1"
-                  opacity="0.6"
-                />
-                {/* National Ashoka Lion & Dharma Chakra Stylized Crest */}
-                <path d="M24 8 L27 15 L32 15 L28 19 L30 25 L24 21 L18 25 L20 19 L16 15 L21 15 Z" fill="#FBBF24" />
-                <circle cx="24" cy="30" r="5" fill="none" stroke="#F59E0B" strokeWidth="1.5" />
-                <path d="M24 27 L24 33 M21 30 L27 30 M22 28 L26 32 M22 32 L26 28" stroke="#F59E0B" strokeWidth="1" />
-                <path d="M14 36 Q24 40 34 36 L34 38 Q24 42 14 38 Z" fill="#B45309" />
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m9 12 2 2 4-4" />
               </svg>
             </div>
 
             {/* Tooltip */}
-            <div className="absolute left-full ml-3 top-1 px-2.5 py-1 bg-slate-900/95 text-amber-300 border border-amber-600/50 rounded-md text-[11px] font-mono whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-xl backdrop-blur-md">
+            <div className="absolute left-full ml-3 top-1 px-2.5 py-1 bg-slate-900/95 text-blue-300 border border-blue-600/40 rounded-md text-[11px] font-mono whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-xl backdrop-blur-md">
               <div className="font-bold flex items-center gap-1.5">
-                <span>AICTE Gold Crest</span>
-                <span className="text-[9px] bg-amber-500/20 text-amber-400 px-1 rounded">Trust Layer</span>
+                <span>SatyaCheck AI</span>
+                <span className="text-[9px] bg-blue-500/20 text-blue-400 px-1 rounded">Agentic</span>
               </div>
-              <p className="text-[10px] text-slate-300 font-sans">SatyaCheck • Docket Console</p>
+              <p className="text-[10px] text-slate-300 font-sans">Verification Workspace</p>
             </div>
           </div>
 
@@ -251,11 +230,11 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
               className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 text-slate-300 flex items-center justify-center hover:border-slate-500 transition-all font-mono text-[11px] font-bold"
               aria-label="Active Officer Profile"
             >
-              AK
+              ON
             </button>
             <div className="absolute left-full ml-3 bottom-1 px-2.5 py-1.5 bg-slate-900/95 text-slate-200 border border-slate-700/80 rounded-md text-[11px] whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-2xl backdrop-blur-md">
-              <span className="font-semibold text-white">Officer A. Kumar</span>
-              <p className="text-[10px] text-slate-400 font-mono mt-0.5">ID-4092 • Click to Manage Roles</p>
+              <span className="font-semibold text-white">Officer Name</span>
+              <p className="text-[10px] text-slate-400 font-mono mt-0.5">Scrutiny Desk • Click to Manage Roles</p>
             </div>
           </div>
 
@@ -301,17 +280,17 @@ export const VerticalNavRail: React.FC<VerticalNavRailProps> = ({
             <div className="bg-[#070A11] p-3 rounded-xl border border-slate-800 text-xs space-y-1.5 font-mono">
               <div className="flex justify-between text-slate-400">
                 <span>Active Profile:</span>
-                <span className="text-white font-bold">Officer A. Kumar (ID-4092)</span>
+                <span className="text-white font-bold">Officer Name</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Station:</span>
-                <span className="text-slate-300">AICTE Western Regional Office (WRO)</span>
+                <span className="text-slate-300">Regulatory Scrutiny Desk</span>
               </div>
               <div className="flex justify-between text-slate-400">
-                <span>Live State Gateways:</span>
-                <span className="text-emerald-400 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Dharani & Bhoomi Synced
+                <span>Authority Adapters:</span>
+                <span className="text-blue-400 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                  Simulated Authority Sandbox
                 </span>
               </div>
             </div>

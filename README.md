@@ -154,8 +154,11 @@ flowchart LR
 Create or edit `backend/.env`:
 ```env
 PROJECT_NAME="SatyaCheck — AICTE Trust Layer"
-SECRET_KEY="satyacheck-super-secret-key-aicte-sih-2026"
-FERNET_KEY="E5rX0Yv1v39X8K_sPz8_jY6L4_Dq7oP2_0yT9-5V4Wc="
+
+# Generate with: python -c "import secrets; from cryptography.fernet import Fernet; print('SECRET_KEY=' + secrets.token_urlsafe(32)); print('FERNET_KEY=' + Fernet.generate_key().decode())"
+SECRET_KEY="generate-a-secure-random-secret-key"
+FERNET_KEY="generate-a-valid-fernet-key-base64-32-bytes"
+FERNET_OLD_KEYS=""
 DATABASE_URL="sqlite:///./satyacheck.db"
 
 # Google Gemini Configuration (Leave empty to use Offline Deterministic Mode)

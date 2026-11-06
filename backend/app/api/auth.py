@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.security import verify_password, create_access_token, mask_sensitive_value
+from app.core.security import verify_password, get_password_hash, create_access_token, mask_sensitive_value
 from app.models import User
 from app.schemas import LoginRequest, Token, UserResponse
 from app.api.deps import get_current_user
@@ -20,6 +20,15 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
         )
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
+
+    # Seamless rotation migration: update hash to current primary SECRET_KEY
+    current_hash = get_password_hash(credentials.password)
+    if user.hashed_password != current_hash:
+        user.hashed_password = current_hash
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
 
     access_token = create_access_token(subject=user.username, role=user.role)
     return Token(

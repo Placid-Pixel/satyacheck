@@ -72,11 +72,11 @@ export const DemoTourModal: React.FC<DemoTourModalProps> = ({ isOpen, onClose, o
       }
       onSelectApplication(match.id);
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       setOpenError(
-        'Backend is not reachable. Keep FastAPI running on http://127.0.0.1:8000 (run.ps1) and retry Inspect.'
+        `Unable to reach backend at ${api.getBaseUrl()}. Please ensure the FastAPI server is running or configure the backend URL in Connection Settings.`
       );
-      console.error(err);
+      console.error('DemoTourModal API Error:', err);
     } finally {
       setOpening(false);
     }

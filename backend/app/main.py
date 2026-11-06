@@ -23,14 +23,26 @@ app = FastAPI(
     description="SatyaCheck — AICTE Trust Layer for Regulatory Compliance & Application Validation"
 )
 
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS Configuration for Local & Deployed Cloud Environments
+cors_origins_env = os.getenv("CORS_ORIGINS", "")
+if cors_origins_env and cors_origins_env.strip() != "*":
+    origins = [orig.strip() for orig in cors_origins_env.split(",") if orig.strip()]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    # Allow all local and deployed origins dynamically while supporting credentials
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX", r"^https?://.*$"),
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Include Routers
 app.include_router(auth_router, prefix=settings.API_V1_STR)

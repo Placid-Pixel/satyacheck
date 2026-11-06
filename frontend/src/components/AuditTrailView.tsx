@@ -50,14 +50,14 @@ export const AuditTrailView: React.FC = () => {
       id: 3,
       sequence_id: 1426,
       timestamp: '2026-10-26 15:15:44 UTC',
-      actor: 'officer.kumar',
+      actor: 'scrutiny.officer',
       role: 'SCRUTINY_OFFICER',
       action: 'PHYSICAL_INSPECTION_REQUESTED',
       resource_type: 'APPLICATION',
       resource_id: 'AICTE-APP-2026-088',
       payload: {
-        notes: 'Discrepancy detected between deed survey boundaries and Dharani record.',
-        officer_id: 'ID-4092'
+        notes: 'Discrepancy detected between deed survey boundaries and statutory registry record.',
+        officer_id: 'Scrutiny Officer'
       },
       previous_hash: '12ac772a55df9012c8a14b03e91129bc57448201a0941ecf',
       block_hash: '3c2a91d84f22a104e76c889312bba71e04c4f98103d81b99'
