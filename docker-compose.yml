@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  satyacheck:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: satyacheck:latest
+    container_name: satyacheck_app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=satyacheck-super-secret-key-aicte-sih-2026
+      - FERNET_KEY=E5rX0Yv1v39X8K_sPz8_jY6L4_Dq7oP2_0yT9-5V4Wc=
+      - DATABASE_URL=sqlite:////app/backend/storage/satyacheck.db
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - MASK_SENSITIVE_DATA=true
+    volumes:
+      - satyacheck_storage:/app/backend/storage
+
+volumes:
+  satyacheck_storage:
+    driver: local

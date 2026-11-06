@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+
+# Virtual Environment
+venv/
+**/venv/
+.env
+.venv
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Production build outputs
+dist/
+**/dist/
+build/
+
+# Local / OS / IDE
+.vercel
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.db-journal

@@ -1,0 +1,24 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/venv/
+backend/.pytest_cache/
+*.db-journal
+
+# Node
+frontend/node_modules/
+frontend/.npm/
+frontend/dist/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
