@@ -61,6 +61,16 @@ storage_path = Path(settings.DATA_DIR)
 storage_path.mkdir(parents=True, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(storage_path)), name="static")
 
+@app.get("/api")
+def api_root_info():
+    return {
+        "status": "healthy",
+        "service": "SatyaCheck AICTE Trust Layer",
+        "version": settings.VERSION,
+        "docs": "/docs",
+        "health": "/api/health"
+    }
+
 @app.get("/health")
 @app.get("/api/health")
 def health_check():
@@ -80,6 +90,10 @@ if frontend_dist.exists() and (frontend_dist / "index.html").exists():
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend-assets")
 
+    @app.get("/")
+    async def serve_index():
+        return FileResponse(str(frontend_dist / "index.html"))
+
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
         if full_path.startswith("api") or full_path.startswith("static") or full_path == "health" or full_path.startswith("docs") or full_path.startswith("openapi.json"):
@@ -88,4 +102,14 @@ if frontend_dist.exists() and (frontend_dist / "index.html").exists():
         if target.is_file():
             return FileResponse(str(target))
         return FileResponse(str(frontend_dist / "index.html"))
+else:
+    @app.get("/")
+    def root_info():
+        return {
+            "status": "healthy",
+            "service": "SatyaCheck AICTE Trust Layer",
+            "version": settings.VERSION,
+            "docs": "/docs",
+            "health": "/health"
+        }
 

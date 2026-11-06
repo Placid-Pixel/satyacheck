@@ -1,14 +1,36 @@
 import { Application, Finding, Rule, AuditBlock, EvaluationMetrics, User, AgentVerificationReport, GeminiStatusResponse, AgentTraceStep } from './types';
 
+/**
+ * Normalizes user-entered or environment backend URL.
+ * Handles whether the input contains or lacks `/api`, trailing slashes, or protocols.
+ */
+export function normalizeBackendUrl(input: string): { rootUrl: string; apiUrl: string } {
+  let clean = (input || '').trim().replace(/\/+$/, '');
+  if (!clean || clean === '/api' || clean === '/') {
+    return { rootUrl: '', apiUrl: '/api' };
+  }
+  if (clean.endsWith('/api')) {
+    const root = clean.slice(0, -4).replace(/\/+$/, '');
+    return { rootUrl: root, apiUrl: clean };
+  }
+  if (clean.startsWith('http://') || clean.startsWith('https://')) {
+    return { rootUrl: clean, apiUrl: `${clean}/api` };
+  }
+  return { rootUrl: clean, apiUrl: `${clean}/api` };
+}
+
 export function getApiBaseUrl(): string {
+  // 1. User manual override stored in localStorage
   const custom = localStorage.getItem('satyacheck_custom_backend_url');
   if (custom && custom.trim()) {
     return custom.trim().replace(/\/+$/, '');
   }
+  // 2. Vite environment variables
   const envUrl = ((import.meta as any).env?.VITE_API_BASE as string) || ((import.meta as any).env?.VITE_API_URL as string);
   if (envUrl && envUrl.trim()) {
     return envUrl.trim().replace(/\/+$/, '');
   }
+  // 3. Default relative /api
   return '/api';
 }
 
@@ -24,20 +46,27 @@ export function clearCustomBackendUrl(): void {
   localStorage.removeItem('satyacheck_custom_backend_url');
 }
 
-function resolveUrl(path: string): string {
+/**
+ * Resolves an API path like `/applications` or `/agent/verify/1`
+ * to the full URL pointing to the backend's `/api` endpoint.
+ */
+export function resolveApiUrl(path: string): string {
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
-  const base = getApiBaseUrl();
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${cleanPath}`;
+  const { apiUrl } = normalizeBackendUrl(getApiBaseUrl());
+  let cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (cleanPath.startsWith('/api') && apiUrl.endsWith('/api')) {
+    cleanPath = cleanPath.slice(4);
+  }
+  return `${apiUrl}${cleanPath}`;
 }
 
 async function handleJsonResponse(res: Response, url: string): Promise<any> {
   const contentType = res.headers.get('content-type') || '';
   if (contentType.includes('text/html')) {
     throw new Error(
-      `Backend is not reachable at ${getApiBaseUrl()}. The server returned HTML instead of API data. If using a deployed frontend, please verify your deployed backend URL in Connection Settings.`
+      `Backend returned HTML instead of API JSON for ${url}. If using a deployed frontend, please verify your deployed backend URL in Connection Settings.`
     );
   }
   if (!res.ok) {
@@ -54,12 +83,12 @@ async function handleJsonResponse(res: Response, url: string): Promise<any> {
 }
 
 async function fetchWithAuth(path: string, options: RequestInit = {}): Promise<Response> {
-  const url = resolveUrl(path);
+  const url = resolveApiUrl(path);
   let token = localStorage.getItem('satyacheck_token');
-  
+
   if (!token) {
     try {
-      const loginUrl = resolveUrl('/auth/login');
+      const loginUrl = resolveApiUrl('/auth/login');
       const loginRes = await fetch(loginUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +100,7 @@ async function fetchWithAuth(path: string, options: RequestInit = {}): Promise<R
         localStorage.setItem('satyacheck_token', token);
       }
     } catch (e) {
-      console.warn('Auto-login failed:', e);
+      console.warn('Auto-login attempt failed (backend may be offline):', e);
     }
   }
 
@@ -87,13 +116,13 @@ async function fetchWithAuth(path: string, options: RequestInit = {}): Promise<R
     res = await fetch(url, { ...options, headers });
   } catch (netErr: any) {
     throw new Error(
-      `Network error connecting to backend at ${getApiBaseUrl()}. Check that FastAPI is running and CORS allows your origin: ${netErr.message || netErr}`
+      `Network error connecting to backend at ${url}. Ensure FastAPI is running and CORS allows your origin: ${netErr.message || netErr}`
     );
   }
 
   if (res.status === 401) {
     try {
-      const loginUrl = resolveUrl('/auth/login');
+      const loginUrl = resolveApiUrl('/auth/login');
       const loginRes = await fetch(loginUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -130,23 +159,73 @@ export const api = {
     clearCustomBackendUrl();
   },
 
-  async checkHealth(): Promise<{ ok: boolean; status?: string; version?: string; error?: string; url: string }> {
-    const targetUrl = resolveUrl('/health');
-    try {
-      const res = await fetch(targetUrl, { method: 'GET' });
-      const contentType = res.headers.get('content-type') || '';
-      if (!res.ok || contentType.includes('text/html')) {
-        return { ok: false, error: `Invalid response (${res.status})`, url: targetUrl };
+  /**
+   * Health probe that checks both `${apiUrl}/health` and `${rootUrl}/health`.
+   * Accepts an optional candidate URL to test before saving.
+   */
+  async checkHealth(candidateUrl?: string): Promise<{ ok: boolean; status?: string; version?: string; error?: string; url: string }> {
+    const targetBase = candidateUrl !== undefined ? candidateUrl : getApiBaseUrl();
+    const { rootUrl, apiUrl } = normalizeBackendUrl(targetBase);
+
+    const probeUrls: string[] = [];
+    if (apiUrl) probeUrls.push(`${apiUrl}/health`);
+    if (rootUrl && rootUrl !== apiUrl) probeUrls.push(`${rootUrl}/health`);
+    if (rootUrl) probeUrls.push(`${rootUrl}/`);
+    if (apiUrl && !probeUrls.includes(`${apiUrl}/`)) probeUrls.push(`${apiUrl}/`);
+
+    let lastError = 'Connection refused';
+
+    for (const url of probeUrls) {
+      try {
+        const res = await fetch(url, { method: 'GET', signal: AbortSignal.timeout(3500) });
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
+          return { ok: true, status: data.status || 'healthy', version: data.version, url };
+        }
+      } catch (err: any) {
+        lastError = err.message || lastError;
       }
-      const data = await res.json();
-      return { ok: true, status: data.status, version: data.version, url: targetUrl };
-    } catch (err: any) {
-      return { ok: false, error: err.message || 'Connection refused', url: targetUrl };
     }
+
+    return {
+      ok: false,
+      error: lastError,
+      url: apiUrl || targetBase
+    };
+  },
+
+  /**
+   * Auto-detects local backend (e.g. 127.0.0.1:8000) or proxy if currently failing.
+   */
+  async autoDetectBackend(): Promise<{ detected: boolean; url?: string }> {
+    const current = await this.checkHealth();
+    if (current.ok) return { detected: true, url: getApiBaseUrl() };
+
+    if (typeof window !== 'undefined') {
+      const candidates = [
+        'http://127.0.0.1:8000',
+        'http://localhost:8000',
+        'http://127.0.0.1:8000/api',
+        '/api'
+      ];
+      for (const cand of candidates) {
+        try {
+          const test = await this.checkHealth(cand);
+          if (test.ok) {
+            setCustomBackendUrl(cand);
+            return { detected: true, url: cand };
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+    return { detected: false };
   },
 
   async login(username: string, password: string): Promise<{ access_token: string; role: string; user_id: number; username: string }> {
-    const url = resolveUrl('/auth/login');
+    const url = resolveApiUrl('/auth/login');
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
